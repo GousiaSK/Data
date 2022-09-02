@@ -1,0 +1,300 @@
+<?xml version="1.0" encoding="UTF-8"?><sqlb_project><db path="C:/Users/shaik.gousia/Downloads/Data sets-20220525/HR (2).db" readonly="0" foreign_keys="1" case_sensitive_like="0" temp_store="0" wal_autocheckpoint="1000" synchronous="2"/><attached/><window><main_tabs open="query pragmas browser structure" current="0"/></window><tab_structure><column_width id="0" width="300"/><column_width id="1" width="0"/><column_width id="2" width="100"/><column_width id="3" width="3719"/><column_width id="4" width="0"/><expanded_item id="0" parent="1"/><expanded_item id="1" parent="1"/><expanded_item id="2" parent="1"/><expanded_item id="3" parent="1"/></tab_structure><tab_browse><current_table name="4,6:mainAuthor"/><default_encoding codec=""/><browse_table_settings/></tab_browse><tab_sql><sql name="SQL 1">select * from wine;
+
+select designation,rank()
+over(order by points)
+from wine;
+
+select designation,dense_rank()
+over(ORDER by designation) from wine;
+
+select designation,ntile(4) over(order by designation) from wine;
+
+select country,lead(country) over(order by price),designation from wine;
+
+select country,designation,cume_dist() over(ORDER by price) from wine;
+
+select country,designation,rank() over(ORDER by points) from wine;
+
+select country,designation,rank() over(PARTITION by province ORDER by price) from wine;
+
+
+
+
+
+SELECT designation,dense_rank() over(order by points) from wine;
+
+SELECT designation,dense_rank() over(ORDER by designation) from wine;
+
+SELECT designation,ntile(4) over(order by designation) from wine;
+
+SELECT country,lead(country) over(order by price),winery from wine;
+
+SELECT country,winery,cume_dist() over(ORDER by price) from wine;
+
+SELECT country,winery,rank() over(ORDER by points) from wine;
+
+SELECT country,winery,rank() over(PARTITION by province ORDER by price) from wine;
+
+--Q1. Rank the winery according to the wine's quality (points).-- Should use dense rank
+
+select winery,dense_rank() over(order by points)as rank from wine;
+--Q2. Apply a dense rank to the various wine varities on the column price.
+
+select variety,winery, price,dense_rank() over(order by price) as rank from wine;
+--Q3.Classify the wine data into 4 buckets based on points
+
+select winery,points,ntile(4) over(order by points desc) from wine;
+--Q4.Display country,next offset country in terms of price,winery .Use lead()
+
+select country,lead(country) over(order by price),winery from wine;
+--Q5.Display country,winery ,cumulative distribution of price of wine on whole dataset.
+
+select country, winery, cume_dist() over (order by price) from wine;
+--Q6.Display country,winery ,rank the winery according to points .Apply rank() 
+select country, winery,points, rank() over(order by points desc) from wine;
+---7----
+select country, winery,points,province, rank() over(order by price desc) from wine group by province ;
+
+-- --------------------------------------------------------------
+# Dataset Used: wine.csv
+-- --------------------------------------------------------------
+
+SELECT * FROM wine;
+
+# Q1. Rank the winery according to the quality of the wine (points).-- Should use dense rank
+SELECT winery, points,
+	RANK() OVER(ORDER BY points DESC) AS RNK
+    FROM wine;
+
+
+# Q2. Give a dense rank to the wine varities on the basis of the price.
+SELECT variety, price,
+	DENSE_RANK() OVER(ORDER BY price DESC) AS RNK
+    FROM wine;
+    
+
+
+# Q3. Use aggregate window functions to find the average of points for each row within its partition (country). 
+-- -- Also arrange the result in the descending order by country.
+
+SELECT country, province, winery, variety, 
+	AVG(points) OVER(PARTITION BY country) AS AvgPoints_CountryWise
+    FROM wine
+    ORDER BY country DESC;
+	
+	
+create table salesman(salesman_id bigint,name varchar (25),city varchar(30),
+commission float);
+
+drop table Orders
+	
+create table Orders(ord_no bigint,purch_amt float8,ord_date date,
+customer_id bigint,salesman_id bigint);	
+
+ insert into salesman(salesman_id,name,city,commission) values
+(5001,'James Hoog','New York',0.15),
+(5002,'Nail Knite','Paris',0.13),
+(5005,'Pit Alex','London',0.11),
+(5006,'Mc Lyon','Paris',0.14),
+(5007,'Paul Adam','Rome',0.13),
+(5003,'Lauson Hen','San Jose',0.12);
+
+
+insert into Orders(ord_no,purch_amt,ord_date,customer_id,salesman_id) values
+(70001,150.5,'2012-10-05',3005,5002),
+(70009,270.65,'2012-09-10',3001,5005),
+(70002,65.26,'2012-10-05',3002,5001),
+(70004,110.5,'2012-08-17',3009,5003),
+(70007,948.5,'2012-09-10',3005,5002),
+(70005,2400.6,'2012-07-27',3007,5001);
+
+SELECT s.name,c.cust_name,c.city FROM salesman s 
+INNER JOIN customer c
+on c.salesman_id=s.salesman_id;
+
+-- Display Salesman,Customer name ,purchase amount of all customers having purchase amount greater than 1000.
+
+SELECT s.name,c.cust_name,o.purch_amt FROM customer c INNER JOIN
+salesman s on c.salesman_id=s.salesman_id INNER join Orders o
+on s.salesman_id=o.salesman_id
+WHERE o.purch_amt&gt;1000;
+
+-- Write a query to display title,rating,cost,average cost rating wise
+
+select title,rating,cost,avg(cost) over(PARTITION by rating) from film;
+
+-- Write a SQL query to display title,cost,row number by cost from film table
+
+SELECT title,cost,row_number() over(order by cost) from film;
+
+-- Write a query to display title and rank all films by cost.
+
+SELECT title,rank() over(order by cost) from film;
+
+6. --Write a sql query to display title,cost,fifth costliest film using windows analytical functions.
+
+SELECT title,cost,nth_value(cost,5) over(order by cost) from film;
+
+
+7.Write a query to display all salesman with commi
+
+
+
+
+
+SELECT s.name,c.cust_name,c.city FROM salesman s 
+INNER JOIN customer c
+on c.salesman_id=s.salesman_id;
+
+2.Display Salesman,Customer name ,purchase amount of all customers having purchase amount greater than 1000.
+
+SELECT s.name,c.cust_name,o.purch_amt FROM customer c INNER JOIN
+salesman s on c.salesman_id=s.salesman_id INNER join Orders o
+on s.salesman_id=o.salesman_id
+WHERE o.purch_amt&gt;1000;
+
+
+3. Write a query to display title,rating,cost,average cost rating wise
+
+select title,rating,cost,avg(cost) over(PARTITION by rating) from film;
+
+4. Write a SQL query to display title,cost,row 
+7.Write a query to display all salesman with commission having two ‘o’ s in their name
+
+SELECT name,commission from salesman
+WHERE name like '%o%o%';
+
+8. Display all order number with purchase amount having purchase amount between 100 and 200.
+
+select * from Orders WHERE
+purch_amt BETWEEN 100 and 200;
+	
+9. -- The company is analyzing the purchase amount for shipping and prioritzing according to purchase amount.
+-- Categorizing the purchase amount if greater than 2000 then 'High Value'
+if purchase amount between 1000 and 2000 then 'Average value'
+else 'Low value'
+
+SELECT purch_amt,CASE
+when purch_amt&gt;2000 then 'High Value'
+when purch_amt BETWEEN 1000 and 2000 then 'Average value'
+ELSE 'Low Value'
+end as purch_amt_status
+ from Orders;
+
+
+
+SELECT s.name,c.cust_name,c.city FROM salesman s 
+INNER JOIN customer c
+on c.salesman_id=s.salesman_id;
+
+--Display Salesman,Customer name ,purchase amount of all customers having purchase amount greater than 1000.
+
+SELECT s.name,c.cust_name,o.purch_amt FROM customer c INNER JOIN
+salesman s on c.salesman_id=s.salesman_id INNER join Orders o
+on s.salesman_id=o.salesman_id
+WHERE o.purch_amt&gt;1000;
+
+
+--Write a query to display title,rating,cost,average cost rating wise
+
+select title,rating,cost,avg(cost) over(PARTITION by rating) from film;
+
+--Write a SQL query to display title,cost,row 
+
+--Write a query to display all salesman with commission having two ‘o’ s in their name
+
+SELECT name,commission from salesman
+WHERE name like '%o%o%';
+
+--Display all order number with purchase amount having purchase amount between 100 and 200.
+
+select * from Orders WHERE
+purch_amt BETWEEN 100 and 200;
+	
+-- The company is analyzing the purchase amount for shipping and prioritzing according to purchase amount.
+-- Categorizing the purchase amount if greater than 2000 then 'High Value'
+if purchase amount between 1000 and 2000 then 'Average value'
+else 'Low value'
+
+SELECT purch_amt,CASE
+when purch_amt&gt;2000 then 'High Value'
+when purch_amt BETWEEN 1000 and 2000 then 'Average value'
+ELSE 'Low Value'
+end as purch_amt_status
+ from Orders;
+drop table salesman
+ create table salesman(salesman_id bigint,name varchar (25),city varchar(30),
+commission float);
+
+create table customer(customer_id bigint,cust_name varchar (25),city varchar(30),
+grade bigint,salesman_id bigint);	
+
+ insert into salesman(salesman_id,name,city,commission) values
+(5001,'James Hoog','New York',0.15),
+(5002,'Nail Knite','Paris',0.13),
+(5005,'Pit Alex','London',0.11),
+(5006,'Mc Lyon','Paris',0.14),
+(5007,'Paul Adam','Rome',0.13),
+(5003,'Lauson Hen','San Jose',0.12);
+
+
+insert into customer(customer_id,cust_name,city,grade,salesman_id) values
+(3002 ,'Nick Rimando','New York',100,5001),
+(3007,'Brad Davis','New York',200,5001),
+(3005,'Graham Zusi','California',200,5002),
+(3008,'Julian Green','London',300,5002),
+(3004,'Fabian Johnson','Paris',300,5006),
+(3009,'Geoff Cameron','Berlin',100,5003);
+
+
+
+create table film(title varchar(25),rating varchar(10),cost float8);
+
+ insert into film(title,rating,cost) values
+('Conquerer Nuts','G',14.99),
+('Fantasia Park','G',29.99),
+('Extraordinary','PG',31.24),
+('Exorcist sitting','G',21.35),
+('Heaven freedom','PG',19.29),
+('Hell Fighters','G',23.99),
+('Horn Working','PG',72.21);
+
+
+
+ --1. From the following tables write a SQL query to find the salesperson and customer who belongs to same city. Return Salesman, cust_name and city.----
+
+select name, cust_name,c.city from salesman s join customer c using(salesman_id) where c.city=s.city;
+	
+--2.Display Salesman,Customer name ,purchase amount of all customers having purchase amount greater than 1000.----
+	
+select purch_amt,name,cust_name from orders join customer using(customer_id) join salesman 
+--6.Write a sql query to display title,cost,fifth costliest film using windows analytical functions.----
+
+select title, cost,nth_value(cost,5) over(order by cost) from film;
+
+--7.Write a query to display all salesman with commission having two ‘o’ s in their name---
+
+select name, commission from salesman where name like '%o%o%';
+
+--8. Display all order number with purchase amount having purchase amount between 100 and 200.----
+
+select ord_no,purch_amt from orders1 where purch_amt between 100 and 200;
+
+--9. The company is analyzing the purchase amount for shipping and prioritzing according to purchase amount.---
+-- Categorizing the purchase amount if greater than 2000 then 'High Value' if purchase amount between 1000 and 2000 then 'Average value' else 'Low value'---
+
+select ord_no, purch_amt, case when purch_amt&gt;2000 then 'High value'
+when purch_amt between 1000 and 2000 then 'Average value'
+else 'low value' 
+end as class from Orders;
+
+
+ 
+ 
+ 
+
+
+
+
+
+</sql><current_tab id="0"/></tab_sql></sqlb_project>

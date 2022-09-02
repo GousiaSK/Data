@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="UTF-8"?><sqlb_project><db path="C:/Users/shaik.gousia/Downloads/Data sets-20220525/HR (2).db" readonly="0" foreign_keys="1" case_sensitive_like="0" temp_store="0" wal_autocheckpoint="1000" synchronous="2"/><attached/><window><main_tabs open="query pragmas browser structure" current="0"/></window><tab_structure><column_width id="0" width="300"/><column_width id="1" width="0"/><column_width id="2" width="100"/><column_width id="3" width="3719"/><column_width id="4" width="0"/><expanded_item id="0" parent="1"/><expanded_item id="1" parent="1"/><expanded_item id="2" parent="1"/><expanded_item id="3" parent="1"/></tab_structure><tab_browse><current_table name="4,9:maincountries"/><default_encoding codec=""/><browse_table_settings/></tab_browse><tab_sql><sql name="Assignment.sql"> CREATE TABLE admin_info (
+
+'admin_id' integer NOT NULL,
+
+'admin_name' varchar(100) NOT NULL,
+
+'admin_email' varchar(300) NOT NULL,
+
+'admin_password' varchar(300) NOT NULL
+
+)
+Insert into admin_info values(1, 'admin', 'admin@gmail.com', '25fgh');
+
+Insert into admin_info values(2, 'admin', 'admin@gmail.com', '25fgh');
+
+Insert into admin_info values(3, 'steven', 'steven@gmail.com', '26ghj');
+
+Insert into admin_info values(4, 'peter', 'peter@gmail.com', '27ghe');
+
+Insert into admin_info values(5, 'mark', 'mark@gmail.com', '29efg');
+
+select * from admin_info
+----------1--------------
+select admin_name,count(*) from admin_info
+group by admin_name
+having count(*)&gt;1;
+----------2--------------
+select admin_name from admin_info
+where admin_name like &quot;_dm%&quot;;
+---------3-----------------
+select (SUBSTR(admin_email, INSTR(admin_email, '@') + 1)) as DomainName from admin_info;
+
+select replace(substr(admin_email, instr(admin_email, '@') + 1), ltrim(substr(admin_email, instr(admin_email, '@') + 1), replace(substr(admin_email, instr(admin_email, '@') + 1), '.', '')), '')
+as Domain from admin_info;
+-----------4----------------
+select admin_password as charactername from admin_info;
+----------5---------------
+CREATE TABLE 'brands' (
+
+'brand_id' int NOT NULL,
+
+'brand_title' varchar(30) NOT NULL,
+
+'admin_id' int
+
+)
+INSERT INTO brands VALUES
+
+(1, 'HP',1),
+
+(2, 'Samsung',2),
+
+(3, 'Apple',3),
+
+(4, 'motorolla',4),
+
+(5, 'LG',5);
+
+select * from brands;
+
+select admin_name,brand_title
+from admin_info
+join brands
+on brands.admin_id = admin_info.admin_id
+where admin_name = 'peter';
+
+-----------6---------------
+select brand_title from brands
+where brand_title like &quot;%e&quot;;
+-------7--------------
+select admin_info.admin_id,brands.brand_title
+from admin_info 
+join brands 
+on brands.admin_id = admin_info.admin_id
+where admin_info.admin_id=3
+---------8-----------
+select brand_id,a.admin_email,a.admin_name
+from admin_info a
+join brands b
+on a.admin_id = b.admin_id
+where b.brand_id = 4;
+---------9-----------
+CREATE TABLE 'users' (
+
+'ID' int(11) NOT NULL,
+
+'NAME' varchar(50) NOT NULL,
+
+'DOB' Date,
+
+'ADDRESS' varchar(100) NOT NULL,
+
+'PHONE' varchar(20) NOT NULL,
+
+'SALARY' double NOT NULL,
+
+'PASSWORD' varchar(20) NOT NULL
+
+)
+
+INSERT INTO 'users' (`ID`, `NAME`, `DOB`, `ADDRESS`, `PHONE`, `SALARY`, `PASSWORD`) VALUES
+
+(1, 'admin', '23-12-1995', 'Bangalore India', '9800000000', 50000, 'admin'),
+
+(2, 'mark', '3-2-1972', 'Bangalore India', '01290789432', 2000, 'mark'),
+
+(3, 'clark', '3-2-1971', 'Gujrat India', '01147893423', 4000, 'rootaccess'),
+
+(4, 'Tont Stark', '7-8-1977', 'west bengal india', '011804368743', 3000, 'rootaccess');
+
+select * from users
+
+select NAME,SALARY,dense_rank()
+over(order by SALARY desc) as rank
+from users;
+----------10---------------
+select NAME,PASSWORD,
+CASE WHEN NAME = PASSWORD THEN &quot;SAME&quot;
+ELSE &quot;NOT SAME&quot;
+END AS STATUS
+FROM USERS
+----------------------------
+
+select trim(SUBSTR(admin_email, INSTR(admin_email, '@') + 1),&quot;.com&quot;)  as DomainName from admin_info;
+
+</sql><sql name="SQL 2">/* SQL Assesment */
+
+ CREATE TABLE admin_info (
+'admin_id' integer NOT NULL,
+'admin_name' varchar(100) NOT NULL,
+'admin_email' varchar(300) NOT NULL,
+'admin_password' varchar(300) NOT NULL
+)
+
+Insert into admin_info values(1, 'admin', 'admin@gmail.com', '25fgh');
+Insert into admin_info values(2, 'admin', 'admin@gmail.com', '25fgh');
+Insert into admin_info values(3, 'steven', 'steven@gmail.com', '26ghj');
+Insert into admin_info values(4, 'peter', 'peter@gmail.com', '27ghe');
+Insert into admin_info values(5, 'mark', 'mark@gmail.com', '29efg');
+
+select * from admin_info
+
+/* Q1. Write a query to display admin_name,count if there is any duplicate name in the table ? */
+
+select admin_name,count(*) as Count from admin_info
+group by admin_name
+having count(*)&gt;1;
+
+/* Q2.Write a query to display the names which has following pattern in second position ‘dm’? */
+
+select admin_name from admin_info
+where admin_name like &quot;_dm%&quot;;
+
+/* Q3. Extract the domain name from the emailid from the table 'admin_info'? */
+
+select trim(substr(admin_email, INSTR(admin_email, '@') + 1),&quot;.com&quot;)  as Domain_Name from admin_info;
+
+/* Q4.Extract all the characters from the column 'admin_password'.Label the column 'charactername'. */
+
+select admin_password as charactername from admin_info;
+
+CREATE TABLE 'brands' (
+'brand_id' int NOT NULL,
+'brand_title' varchar(30) NOT NULL,
+'admin_id' int
+)
+
+INSERT INTO brands VALUES
+(1, 'HP',1),
+(2, 'Samsung',2),
+(3, 'Apple',3),
+(4, 'motorolla',4),
+(5, 'LG',5);
+
+select * from brands;
+
+/* Q5. Write a query to display the brand title of 'Peter' */
+
+select admin_name,brand_title
+from admin_info
+join brands
+on brands.admin_id = admin_info.admin_id
+where admin_name = 'peter';
+
+/* Q6. Write a query to display the 'brand_title' from the table 'brands' where the last character ends with 'e'? */
+
+select brand_title from brands
+where brand_title like &quot;%e&quot;;
+
+/* Q7. Write a query to display the brand title of the admin_id 3? */
+
+select admin_info.admin_id,brands.brand_title
+from admin_info 
+join brands 
+on brands.admin_id = admin_info.admin_id
+where admin_info.admin_id=3
+
+/* Q8. Write a query to display the email id &amp; admin_name for the respective brand id 4 of the brands table. */
+
+select brand_id,a.admin_email,a.admin_name
+from admin_info a
+join brands b
+on a.admin_id = b.admin_id
+where b.brand_id = 4; 
+
+CREATE TABLE 'users' (
+'ID' int(11) NOT NULL,
+'NAME' varchar(50) NOT NULL,
+'DOB' Date,
+'ADDRESS' varchar(100) NOT NULL,
+'PHONE' varchar(20) NOT NULL,
+'SALARY' double NOT NULL,
+'PASSWORD' varchar(20) NOT NULL
+)
+
+INSERT INTO 'users' (`ID`, `NAME`, `DOB`, `ADDRESS`, `PHONE`, `SALARY`, `PASSWORD`) VALUES
+(1, 'admin', '23-12-1995', 'Bangalore India', '9800000000', 50000, 'admin'),
+(2, 'mark', '3-2-1972', 'Bangalore India', '01290789432', 2000, 'mark'),
+(3, 'clark', '3-2-1971', 'Gujrat India', '01147893423', 4000, 'rootaccess'),
+(4, 'Tont Stark', '7-8-1977', 'west bengal india', '011804368743', 3000, 'rootaccess');
+
+select * from users;
+
+/* Q9. Write a query to display salary, Dense_ranks to the 'SALARY' column of the table 'users'? */
+
+select name,salary,dense_rank()
+over(order by salary desc) as rank
+from users;
+
+/* Q10.Write a query to display name, an extra columns 'Status'which will yield 'same' if the NAME &amp; Password are same or else 'Not Same'if the NAME &amp; Password are not same. */
+
+select name,password,
+case when name = password then &quot;Same&quot;
+else &quot;Not Same&quot;
+end as Status
+from users
+
+</sql><current_tab id="1"/></tab_sql></sqlb_project>

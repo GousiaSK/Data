@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?><sqlb_project><db path="C:/Users/shaik.gousia/Downloads/Data sets-20220525/HR (2).db" readonly="0" foreign_keys="1" case_sensitive_like="0" temp_store="0" wal_autocheckpoint="1000" synchronous="2"/><attached/><window><main_tabs open="structure browser pragmas query" current="3"/></window><tab_structure><column_width id="0" width="300"/><column_width id="1" width="0"/><column_width id="2" width="100"/><column_width id="3" width="3719"/><column_width id="4" width="0"/><expanded_item id="0" parent="1"/><expanded_item id="1" parent="1"/><expanded_item id="2" parent="1"/><expanded_item id="3" parent="1"/></tab_structure><tab_browse><current_table name="4,9:maincountries"/><default_encoding codec=""/><browse_table_settings><table schema="main" name="countries" show_row_id="0" encoding="" plot_x_axis="" unlock_view_pk="_rowid_"><sort/><column_widths><column index="1" value="78"/><column index="2" value="149"/><column index="3" value="68"/></column_widths><filter_values/><conditional_formats/><row_id_formats/><display_formats/><hidden_columns/><plot_y_axes/><global_filter/></table></browse_table_settings></tab_browse><tab_sql><sql name="SQL 1">---Data Query / Retrieval Language---
+SELECT * FROM employees;
+SELECT * FROM jobs;
+/* All rows and Columns --use *.. */
+SELECT first_name,salary FROM employees;
+SELECT first_name,last_name,hire_date,department_id FROM employees;
+/*Comparision Operator */
+SELECT * FROM employees WHERE salary &gt; 15000;
+/* &lt; &lt;= &gt; &gt;= = */
+SELECT * FROM employees WHERE salary &gt; 10000;
+SELECT * FROM employees WHERE salary &lt;= 15000;
+SELECT * FROM employees WHERE salary = 15000;
+/* 1. Displaying all rows from table departments */
+SELECT * FROM departments;
+/* 2. Display all the details from departments table where department_id=10 */
+SELECT * FROM departments WHERE department_id = 10;
+/* 3. Display first_name,last_name,department_id,job_id, having job_id=2 */
+SELECT first_name,last_name,department_id,job_id FROM employees WHERE job_id = 2;
+/* 4. Write a query to display salary of employee_id = 102 */
+SELECT salary FROM employees WHERE employee_id = 102;
+/* 5. Display employee_id,first_name,email,salary of all employees having salary &gt; 15000 */
+SELECT employee_id,first_name,email,salary FROM employees WHERE salary &gt; 15000;
+/* AND - OR */
+SELECT first_name,salary,department_id,job_id FROM employees WHERE salary &gt; 10000 AND department_id =9 ;
+SELECT first_name,salary,department_id,job_id FROM employees WHERE department_id = 9 AND job_id = 5 ;
+SELECT * FROM employees WHERE department_id = 5 OR department_id = 9 ;
+/* SELECT with datatypes 
+1. int
+2. character
+3. date 
+*/
+SELECT first_name,department_id FROM employees WHERE department_id = 3;
+SELECT first_name,last_name,salary FROM employees WHERE first_name = 'Steven';
+SELECT first_name,salary FROM employees WHERE first_name = 'Neena';
+SELECT first_name,last_name,hire_date FROM employees WHERE hire_date = '1987-06-17';
+SELECT first_name,last_name,hire_date FROM employees WHERE hire_date = '1987/06/17';--Not Working
+/* Limit -- Restrict the rows */
+SELECT * FROM employees LIMIT 10;
+SELECT * FROM departments LIMIT 2;
+SELECT first_name,salary,salary+salary*(0.1) AS [Hiked salary] FROM employees;
+SELECT first_name,salary,salary+100 AS [Hiked salary] FROM employees;
+/* LIKE -- It allows you to match similar not exact */
+/* %--more than one char _ --one char */
+SELECT * FROM employees WHERE first_name LIKE 'N%';
+SELECT * FROM employees WHERE first_name LIKE 'S%' AND salary &gt; 10000 ;
+SELECT * FROM employees WHERE first_name LIKE '_A%' AND salary &gt; 5000;
+/* It allows us to specify a list of values we want to include */
+SELECT * FROM employees WHERE department_id IN (10,2,5);
+SELECT * FROM titanic;
+
+
+
+</sql><current_tab id="0"/></tab_sql></sqlb_project>

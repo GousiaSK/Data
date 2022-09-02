@@ -1,0 +1,264 @@
+<?xml version="1.0" encoding="UTF-8"?><sqlb_project><db path="C:/Users/shaik.gousia/Downloads/Data sets-20220525/HR (2).db" readonly="0" foreign_keys="1" case_sensitive_like="0" temp_store="0" wal_autocheckpoint="1000" synchronous="2"/><attached/><window><main_tabs open="structure browser pragmas query" current="3"/></window><tab_structure><column_width id="0" width="300"/><column_width id="1" width="0"/><column_width id="2" width="100"/><column_width id="3" width="3719"/><column_width id="4" width="0"/><expanded_item id="0" parent="1"/><expanded_item id="1" parent="1"/><expanded_item id="2" parent="1"/><expanded_item id="3" parent="1"/></tab_structure><tab_browse><current_table name="4,8:mainbiriyani"/><default_encoding codec=""/><browse_table_settings/></tab_browse><tab_sql><sql name="SQL 1">select * from employees;
+/* || concat */
+select first_name,department_id from employees where first_name = 'Steven';
+Select first_name|| ' Works for department ' || department_id from employees
+select first_name||' works for department '||department_id from employees where first_name='Steven';
+select first_name || ' was hired on '|| hire_date from employees;
+select first_name || ' ' || last_name ||' ' || 'was hired on ' || hire_date from employees;
+/* Order By */
+select first_name,salary from employees order by salary;
+select first_name,salary from employees order by salary desc;
+select first_name,salary,department_id from employees order by job_id;
+select first_name,hire_date,phone_number,email from employees order by first_name desc;
+/*Group By Clause 
+syntax:
+select colname1,colname2
+from &lt;table name&gt;
+where &lt;cond&gt;
+group by colname;
+*/
+/* Summary or aggregate functions 
+1.max
+2.min
+3.count
+4.avg
+5.sum
+*/
+/* Max salary department wise */
+select department_id,max(salary)
+from employees
+group by department_id;
+/*Min Salary department wise */
+select department_id,min(salary)
+from employees
+group by department_id;
+
+select count(employee_id) from employees;
+/* count of employees department wise*/
+select department_id,count(employee_id)
+from employees
+group by department_id;
+/* sum of salary department wise */
+select department_id,sum(salary)
+from employees
+group by department_id;
+/* Avg of salary department wise */
+select department_id,avg(salary)
+from employees
+group by department_id;
+
+/* Having Clause--Uses Aggregate functions ,It is always after group by */
+select department_id, count(employee_id)
+from employees
+group by department_id
+having count(employee_id)&gt;2;
+
+select department_id, count(employee_id) as cnt
+from employees
+group by department_id
+having cnt&gt;2;
+/* here cnt is column alias */
+select department_id,sum(salary) as new
+from employees
+group by department_id
+having new &gt; 25000;
+
+select department_id,min(salary) as new
+from employees
+group by department_id
+having new &gt; 5000;
+
+--where clause -- works with columns -- before group by
+
+select department_id,sum(salary)
+from employees
+where department_id &gt; 3
+group by department_id
+
+select department_id,sum(salary) as s
+from employees
+where department_id &gt; 3
+group by department_id
+having s&gt; 10000;
+
+select department_id,max(salary) as sal
+from employees
+where job_id &gt; 3
+group by department_id
+having sal&gt;5000;
+
+--1--
+select job_id,
+	sum(salary),
+	avg(salary) as sal,
+	max(salary)
+from employees
+where job_id &gt; 3
+group by job_id
+having sal &gt; 5000
+order by sum(salary);
+
+SELECT job_id,sum(salary),avg(salary),max(salary)
+from employees
+where job_id&gt;3
+GROUP by job_id
+having avg(salary)&gt;5000;
+
+select department_id,sum(salary)
+from employees
+where manager_id = 103
+group by department_id;
+
+select department_id,max(salary) as sal
+from employees
+group by department_id
+having sal between 2000 and 8000;
+
+-----------------------------------------------
+/* Working with Dates 
+Datatypes in sqlite
+1.TEXT
+2.INTEGER
+3.REAL
+------
+SQL Commands
+
+1.DQL -- Data Query Language (SELECT)
+2.DDL -- Data Defintion Language ( CREATE , ALTER, DROP )
+3.DML -- Data Manipulation Language ( INSERT, UPDATE, DELETE)
+4.DCL -- Data Control Language (GRANT,REVOKE)
+
+*/
+
+--DATE functions---
+select hire_date from employees;
+--1.strftime()
+--2.date()
+--3.now() -- current date
+--now()
+select date('now');
+select time('now');
+--strftime()
+select strftime('%Y',hire_date),
+	strftime('%m',hire_date),
+	strftime('%d',hire_date),
+hire_date from employees;
+/*
+ %d 		day of month: 00
+%f 		fractional seconds: SS.SSS
+%H 		hour: 00-24
+%j 		day of year: 001-366
+%J 		Julian day number (fractional)
+%m 		month: 01-12
+%M 		minute: 00-59
+%s 		seconds since 1970-01-01
+%S 		seconds: 00-59
+%w 		day of week 0-6 with Sunday==0
+%W 		week of year: 00-53
+%Y 		year: 0000-9999
+%% 		%
+*/
+
+--date()--
+select hire_date,date(hire_date,'start of year'),
+	date(hire_date,'start of month') from employees;
+	
+select first_name,hire_date,strftime('%Y',hire_date) from employees;
+
+---DDL commands--
+create table student 
+(
+id integer,
+name text,
+bdate text,
+marks integer
+);
+--insert --DML
+insert into student (id,name,bdate,marks) values (1,'TEST','1990-10-17',89);
+select * from student;
+
+
+CREATE TABLE pizza
+(
+pizza_id INTEGER,
+pizza_name TEXT,
+price INTEGER
+);
+insert into pizza values (1,'Chicken',200),(2,'Mushroom',150),(3,'Veg',180);
+select * from pizza;
+
+select * from pizza;
+
+update pizza
+set price=160
+where pizza_id=2;
+
+/* for update entire row we need not to write where confition 
+syntax:
+UPDATE TABLE_NAME
+SET &lt;CONDITION&gt;
+WHERE &lt;CONDITION&gt;
+*/
+--DELETE--
+delete from student where id=1;
+select * from student;
+--------1----------
+update pizza
+set price=280
+where pizza_id=2;
+
+select * from pizza
+-----2-----------
+delete from pizza where pizza_id = 2;
+select * from pizza;
+
+---DROP --DDL
+drop table student;
+--select * from student shows error
+
+---CASE STATEMENT---
+select * from employees;
+/* 
+CASE WHEN &lt;CONDITION&gt; THEN &lt;STATEMENT&gt;
+WHEN &lt;CONDITION&gt;THEN &lt;STATEMENT&gt;
+ELSE &lt;STATEMENT&gt;
+END
+*/
+select first_name,salary,
+case when salary &gt; 20000 then 'High Sal'
+when salary between 10000 and 20000 then 'Medium Sal'
+else 'Work hard'
+end as salary from employees
+
+SELECT * FROM titanic;
+
+select first_name,fare,
+case when fare &gt; 50000 then 'High Fare'
+when fare between 20000 and 50000 then 'Medium Fare'
+else 'Low Fare'
+end as fare from titanic;
+
+select first_name,department_id,hire_date,
+case when hire_date &gt; 15 then 'After 15'
+when hire_date&lt;15 then 'Before 15'
+else 'Correct 15'
+end as hire from employees
+
+SELECT first_name,department_id,hire_date,
+CASE when strftime('%d',hire_date)&gt;'15' then 'After 15'
+when strftime('%d',hire_date)&lt;'15' then 'Before 15'
+ELSE 'correct 15'
+END as hire from employees;
+
+select first_name,phone_number,salary,hire_date,
+case when strftime('%Y',hire_date)&gt;'1990' then 'Fresher'
+when strftime('%Y',hire_date) between '1988' and '1990' then 'Mid Level'
+else 'Senior'
+end as Employee from employees
+
+select first_name,survived,age,
+case when age &gt; 40 then 'Mid Level'
+when age between 20 and 40 then 'Adult'
+else 'Child'
+end as level from titanic;
+</sql><current_tab id="0"/></tab_sql></sqlb_project>

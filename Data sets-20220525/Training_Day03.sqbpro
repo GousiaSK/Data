@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?><sqlb_project><db path="C:/Users/shaik.gousia/Downloads/Data sets-20220525/HR (2).db" readonly="0" foreign_keys="1" case_sensitive_like="0" temp_store="0" wal_autocheckpoint="1000" synchronous="2"/><attached/><window><main_tabs open="query pragmas browser structure" current="0"/></window><tab_structure><column_width id="0" width="300"/><column_width id="1" width="0"/><column_width id="2" width="100"/><column_width id="3" width="3719"/><column_width id="4" width="0"/><expanded_item id="0" parent="1"/><expanded_item id="1" parent="1"/><expanded_item id="2" parent="1"/><expanded_item id="3" parent="1"/></tab_structure><tab_browse><current_table name="4,6:mainAuthor"/><default_encoding codec=""/><browse_table_settings/></tab_browse><tab_sql><sql name="SQL 1">CREATE TABLE `sandwich` (
+  `sid` varchar(10) primary key,
+  `name` varchar(30) DEFAULT NULL,
+  `filling` varchar(30) DEFAULT NULL,
+  `bread` varchar(30) DEFAULT NULL,
+  `price` int DEFAULT NULL) ;
+  
+insert into sandwich values('s1',	'san-chicken',	'chicken',	'White',	50);
+insert into sandwich values('s2',	'san-chicken',	'chicken',	'Brown',	55);
+insert into sandwich values('s3',	'san-veggie',	'mixed veg',	'Brown',	50);
+insert into sandwich values('s4',	'san-veggie',	'mixed veg',	'multi grain',	55);
+insert into sandwich values('s5',	'san-aloo tikki',	'potato',	'Rye',	25);
+insert into sandwich values('s6','san-mexican veg', 'veg  mayonnaise','White',45);
+insert into sandwich values('s7',	'san-mixed cheese',	'cheese veg',	'White',	60);
+
+
+CREATE TABLE `sandwichorder` (
+  `sid` varchar(10) references sandwich(sid),
+  qty integer ) ;
+  
+  insert into sandwichorder values('s1',2),('s2',3),('s3',4);
+  insert into sandwichorder values(null,1);
+  
+  
+ Exercises on sandwich TABLE
+ 1. Display the details of sandwiches where price ranges from 20 to 50. 
+2. Display the details of sandwiches of brown bread. 
+3. Display the names of the sandwiches in uppercase. 
+4. Display the names of the sandwiches where the filling contains “veg”. 
+5. Display sandwich name and qty ordered
+6.Display sandwich name which were ordered and not ordered
+7. Display all the  orders with or without sandwich names
+ 
+ select * from sandwich;
+ select * from sandwichorder;
+ 
+ 
+---1---
+ SELECT *
+ FROM sandwich
+ WHERE price BETWEEN 20 AND 50;
+---2----
+SELECT *
+FROM sandwich
+WHERE bread = 'Brown';
+---3---
+SELECT upper(name)
+FROM sandwich;
+---4---
+SELECT name
+FROM sandwich
+WHERE filling LIKE '%veg%';
+---5---
+SELECT name,qty
+FROM sandwich S
+JOIN sandwichorder SO
+ON S.sid = SO.sid;
+---6---
+SELECT S.name,
+CASE
+WHEN SO.qty&gt;0 THEN 'Ordered'
+ELSE 'Not Ordered'
+END AS status
+FROM sandwich S
+LEFT JOIN sandwichorder SO
+ON S.sid=SO.sid
+GROUP BY S.name;
+---7----
+</sql><current_tab id="0"/></tab_sql></sqlb_project>

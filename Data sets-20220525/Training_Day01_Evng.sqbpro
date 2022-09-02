@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?><sqlb_project><db path="C:/Users/shaik.gousia/Downloads/Data sets-20220525/HR (2).db" readonly="0" foreign_keys="1" case_sensitive_like="0" temp_store="0" wal_autocheckpoint="1000" synchronous="2"/><attached/><window><main_tabs open="structure browser pragmas query" current="3"/></window><tab_structure><column_width id="0" width="300"/><column_width id="1" width="0"/><column_width id="2" width="100"/><column_width id="3" width="3719"/><column_width id="4" width="0"/><expanded_item id="0" parent="1"/><expanded_item id="1" parent="1"/><expanded_item id="2" parent="1"/><expanded_item id="3" parent="1"/></tab_structure><tab_browse><current_table name="4,9:maincountries"/><default_encoding codec=""/><browse_table_settings/></tab_browse><tab_sql><sql name="SQL 1">select * from biriyani;
+
+select name,type from biriyani where name like 'Ch%';
+
+select name,price,type from biriyani where name like '%tt%';
+
+select name,type,price from biriyani where type = 'Veg';
+
+select * from biriyani where name like '%Dum biriyani';
+
+select * from biriyani where price BETWEEN 150 and 180;
+
+select price,price+(price*0.1) as price_new from biriyani;
+
+select id,name,type,price+price*0.1 as [Updated Price] from biriyani;
+
+select substr('xyz@mandconsulting.com',5);
+
+select substr('xyz@mandconsulting.com',(instr('xyz@mandconsulting.com','@'))+1);
+
+select substr('xyz@mandconsulting.com',(instr('xyz@mandconsulting.com','m')),23);
+
+</sql><current_tab id="0"/></tab_sql></sqlb_project>

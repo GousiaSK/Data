@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="UTF-8"?><sqlb_project><db path="C:/Users/shaik.gousia/Downloads/Data sets-20220525/HR (2).db" readonly="0" foreign_keys="1" case_sensitive_like="0" temp_store="0" wal_autocheckpoint="1000" synchronous="2"/><attached/><window><main_tabs open="query pragmas browser structure" current="0"/></window><tab_structure><column_width id="0" width="300"/><column_width id="1" width="0"/><column_width id="2" width="100"/><column_width id="3" width="3719"/><column_width id="4" width="0"/><expanded_item id="0" parent="1"/><expanded_item id="1" parent="1"/><expanded_item id="2" parent="1"/><expanded_item id="3" parent="1"/></tab_structure><tab_browse><current_table name="4,6:mainAuthor"/><default_encoding codec=""/><browse_table_settings/></tab_browse><tab_sql><sql name="SQL 1">Subquery : It is a nested query where query is embeded within a where clause.
+A subquery is used to return data that will be used in the main query.
+-----
+select * from employees;
+--
+SELECT first_name,department_id
+from employees
+where salary = (SELECT max(salary) from employees);
+--
+--subsquery can be use interchangeablly with sql joins
+--joins arfe muc faster than subquery
+
+---
+select first_name,email
+from employees
+where salary=(select min(salary) from employees);
+
+---
+select first_name,last_name 
+from employees
+where salary  &gt; (select salary from employees where last_name = 'Ernst');
+
+select first_name,last_name
+from employees
+where department_id
+
+select * from departments;
+
+
+
+-----------
+select first_name,last_name
+from employees
+where department_id = (select department_id
+from departments where department_name = 'IT');
+------------
+select first_name,last_name,salary
+from employees
+where salary in (select min(salary)
+from employees
+group by job_id)
+group by job_id;
+-------------
+select first_name,last_name,salary
+from employees
+where salary &gt; (select avg(salary) from employees);
+	
+--------ANALYTICAL WINDOW FUNCTIONS---------
+1.LEAD()
+2.LAG()
+3.FIRST_VALUE()
+4.LAST_VALUE()
+---------AGGREGATE FUNCTIONS---------
+----
+Syntax:
+---
+select colname,windowfunction() 
+over(partition by colname order by colname)--over is mandatory
+from tablename;
+
+select department_id,sum(salary) as [Grand Total]
+from employees
+group by department_id;
+
+select first_name,last_name,email,department_id,salary,sum(salary)
+over (partition by department_id) as [Grand Total]
+from employees;
+
+select first_name,last_name,department_id,salary,avg(salary)
+over(partition by department_id) as [Grand Avg]
+from employees;
+
+select first_name,last_name,department_id,salary,max(salary)
+over(partition by department_id) as [Grand max]
+from employees;
+
+select first_name,last_name,department_id,salary,min(salary)
+over(partition by department_id) as [Grand min]
+from employees;
+
+select first_name,employees.department_id,salary,
+strftime('%Y',hire_date),
+avg(salary)
+over(partition by strftime('%Y',hire_date)) as [YearSal],department_name
+from employees
+join departments
+on departments.department_id = employees.department_id;
+
+--------RANKING FUNCTIONS----------
+--rank() -- skip ranks
+select first_name,salary,rank()
+over(order by salary desc) as rank
+from employees;
+
+--dense_rank() -- give all ranks
+select first_name,salary,dense_rank()
+over(order by salary desc) as rank
+from employees;
+
+select first_name,salary,email,department_id,dense_rank()
+over(partition by department_id order by salary) as rank
+from employees;
+
+--ntile()
+select first_name,salary,ntile(4)
+over (order by salary) from employees;
+
+--nth_value()
+select first_name,last_name,salary,
+nth_value(first_name,3)
+over(order by salary)
+from employees;
+
+select first_name,last_name,salary,job_id,
+nth_value(salary,3)
+over(partition by job_id order by salary)
+from employees;
+
+--row_number()
+select first_name,salary,row_number()
+over(order by salary) as rowno
+from employees;
+
+select first_name,email,phone_number,row_number()
+over(order by first_name) as rowno
+from employees;
+
+--“Compare each employee's salary with the average salary of the corresponding department.
+-- Output the department, first name,
+-- and salary of employees along with the 
+--average salary of that department.”
+
+
+select d.department_id,department_name,first_name,
+salary,avg(salary)
+over(partition by d.department_id) as [Avg Salary]
+from employees as e
+join departments as d
+on d.department_id = e.department_id;
+
+SELECT department_id,first_name,salary,avg(salary)
+over(PARTITION by department_id) ,
+case  when salary &gt; avg(salary)
+over(partition by department_id) then 'High Salary'
+else 'low salary'
+end as salary_status
+from employees;
+
+
+select * from titanic;
+--1.Write a query to display first_name,last_name,survived, fare.
+--Rank the passengers without skipping.
+
+select first_name,last_name,survived,fare,dense_rank()
+over(order by fare) from titanic;
+--2. Display first_name,last_name,age,class,deck,embark_town,fare of passengers.
+--Display and compare fare of fifth passenger who paid highest fare
+
+select first_name,last_name,age,class,deck,embark_town,fare,
+nth_value(fare,5)
+over(order by fare desc)
+from titanic;
+
+--3.Find which embark_town paid highest average fare in titanic cruise ship USING
+--windows analytical functions
+
+SELECT embark_town,avg(fare) from titanic
+GROUP by embark_town
+order by avg(fare) DESC
+limit 1;
+
+select embark_town,avg(fare)
+over(partition by embark_town order by avg(fare)desc) as [Avg fare]
+from titanic;
+
+SELECT strftime('%m',hire_date),avg(salary)
+over(PARTITION by strftime('%m',hire_date))
+as highest_avg_salary from employees
+order by highest_avg_salary desc
+limit 1;
+
+SELECT strftime('%Y',hire_date),avg(salary)
+over(PARTITION by strftime('%Y',hire_date))
+as highest_avg_salary from employees
+order by highest_avg_salary desc
+limit 1;
+
+select strftime('%Y',hire_date),avg(salary)
+over(partition by strftime('%Y',hire_date))
+from employees;
+
+
+select first_name,last_name,age,sex,class,
+sum(fare),avg(fare)
+from titanic
+group by class;
+
+select first_name,age,who,adult_male,count(adult_male) as Count
+from titanic
+where adult_male = 'TRUE'
+group by survived;
+
+
+SELECT first_name,last_name,age,sex,class,sum(fare)
+over(PARTITION by class),avg(fare)
+over(PARTITION by class) FROM titanic;
+
+SELECT first_name,last_name,age,sex,deck,avg(age)
+over(PARTITION by deck) from titanic;
+
+SELECT first_name,age,who,adult_male,count(adult_male)
+over(PARTITION by survived) from titanic;
+
+select * from employees;
+select * from jobs;
+
+select first_name,last_name 
+from employees
+where employee_id in(select manager_id from employees );
+
+select first_name,last_name,salary
+from employees
+where salary &gt;(select avg(salary) from employees);
+
+
+</sql><current_tab id="0"/></tab_sql></sqlb_project>
